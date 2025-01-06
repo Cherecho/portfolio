@@ -37,7 +37,7 @@ function HomeSection() {
         <div className="absolute shadow-2xl bottom-3 left-[50%] translate-x-[-50%]">
           <a href="#content" className="animate-bounce block">
             <Image
-              src="/pointing-up.png"
+              src="/arrow.png"
               alt="Pointing Icon"
               width={37}
               className="rotate-180"
