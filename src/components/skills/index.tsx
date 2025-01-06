@@ -1,7 +1,6 @@
 import React from 'react'
 import Skill from './skill'
 import {
-  CloudinaryIcon,
   CssIcon,
   FirebaseIcon,
   GitIcon,
@@ -17,13 +16,11 @@ import {
   SolidityIcon,
   MysqlIcon,
   InfluxIcon,
-  NextjsIcon,
   PostgressIcon,
   ReactJsIcon,
-  SassIcon,
   TailwindcssIcon,
-  TypeScriptIcon,
-  VercelIcon
+  GrafanaIcon,
+  TensorflowIcon
 } from '@icons'
 
 export default function SkillsSection() {
@@ -48,8 +45,10 @@ export default function SkillsSection() {
           <Skill title="Postgress" icon={<PostgressIcon />} />
           <Skill title="InfluxDB" icon={<InfluxIcon />} />
           <Skill title="Git" icon={<GitIcon />} />
-          <Skill title="HTML" icon={<HtmlIcon />} />
-          <Skill title="CSS" icon={<CssIcon />} />
+          <Skill title="Grafana" icon={<GrafanaIcon />} />
+          <Skill title="Tensorflow" icon={<TensorflowIcon />} />
+          {/* <Skill title="HTML" icon={<HtmlIcon />} />
+          <Skill title="CSS" icon={<CssIcon />} /> */}
           {/* <Skill title="Next js" icon={<NextjsIcon />} /> */}
           <Skill title="React js" icon={<ReactJsIcon />} />
           
