@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --secondary-glow: linear-gradient(
+    to bottom right,
+    rgba(255, 86, 1, 0),
+    rgba(255, 132, 1, 0),
+    rgba(255, 128, 1, 0.3)
+  );
+
+  --body-background: #f6f6f6;
+  --primary-glow: radial-gradient(rgba(255, 128, 1, 0.3), rgba(255, 175, 1, 0));
+  --scrollbar-tumbl: #b3b3b369;
+  --gradient-title-custom: linear-gradient(#151414, #5e0c7300);
+  --shadow-cursor: 216, 144, 29, 0.15;
+} */
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --secondary-glow: linear-gradient(
+    to bottom right,
+    rgba(55, 48, 107, 0),
+    rgba(5, 1, 255, 0),
+    rgba(52, 97, 127, 0.3)
+  );
+
+  --body-background: #f6f6f6;
+  --primary-glow: radial-gradient(rgba(52, 91, 127, 0.3), rgba(255, 175, 1, 0));
+  --scrollbar-tumbl: #b3b3b369;
+  --gradient-title-custom: linear-gradient(#66347F, #5e0c7300);
+  --shadow-cursor: 216, 144, 29, 0.15;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+    --body-background: #020f1b;
+    --shadow-cursor: 110, 172, 218, 0.038;
+    --gradient-title-custom: linear-gradient(#03346E, #021526);
+    color-scheme: dark;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+}
+
+/* my styles */
+.page_center__diPtZ {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 4rem 0;
+}
+.page_center__diPtZ::before {
+  content: '';
+  left: 50%;
+  position: absolute;
+  filter: blur(45px);
+  transform: translateZ(0);
+  background: var(--secondary-glow);
+  border-radius: 50%;
+  width: 480px;
+  height: 360px;
+  margin-left: -400px;
+}
+.page_center__diPtZ::after {
+  content: '';
+  left: 50%;
+  position: absolute;
+  filter: blur(45px);
+  transform: translateZ(0);
+  background: var(--primary-glow);
+  width: 240px;
+  height: 180px;
+  z-index: -1;
+}
+.shake-left-right:hover {
+  animation: shake-left-2 0.8s linear both;
+}
+.shake-left-right {
+  animation: shake-left-right 0.8s linear both;
+}
+@keyframes shake-left-right {
+  0%,
+  100% {
+    transform: rotate(0deg);
+    transform-origin: 50% 50%;
+  }
+  10% {
+    transform: rotate(8deg);
+  }
+  20%,
+  40%,
+  60% {
+    transform: rotate(-10deg);
+  }
+  30%,
+  50%,
+  70% {
+    transform: rotate(10deg);
+  }
+  80% {
+    transform: rotate(-8deg);
+  }
+  90% {
+    transform: rotate(8deg);
+  }
+}
+@keyframes shake-left-2 {
+  0%,
+  100% {
+    transform: rotate(0deg);
+    transform-origin: 50% 50%;
+  }
+  10% {
+    transform: rotate(8deg);
+  }
+  20%,
+  40%,
+  60% {
+    transform: rotate(-10deg);
+  }
+  30%,
+  50%,
+  70% {
+    transform: rotate(10deg);
+  }
+  80% {
+    transform: rotate(-8deg);
+  }
+  90% {
+    transform: rotate(8deg);
+  }
+}
+
+.text-gradient {
+  background-image: var(--gradient-title-custom);
+  background-attachment: fixed;
+  background-size: cover;
+  position: relative;
+}
