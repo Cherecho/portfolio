@@ -5,9 +5,9 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Cherecho_ | Software Engineer & AI Enthusiast',
-  description: 'Cherecho_ or Alvaro - Software Engineer',
+  description: 'Cherecho_ - Software Engineer',
   icons: {
-    icon: '/avatar-square.png'
+    icon: '/favicon.png'
   }
 }
 export default function RootLayout({
@@ -19,8 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta property="og:image" content="/projects/portfolio.png"></meta>
-        <link rel="preload" as="image" href="/avatar-square-padding.png"></link>
-        <link rel="preload" as="image" href="/arrow.png"></link>
       </head>
       <body
         className={cn('bg-[--body-background] scroll-smooth', inter.className)}
