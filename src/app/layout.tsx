@@ -7,7 +7,7 @@ export const metadata = {
   title: 'Cherecho_ | Software Engineer & AI Enthusiast',
   description: 'Cherecho_ - Software Engineer',
   icons: {
-    icon: '/favicon.png'
+    icon: './favicon.png'
   }
 }
 export default function RootLayout({
