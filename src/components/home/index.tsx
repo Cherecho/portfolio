@@ -29,7 +29,7 @@ function HomeSection() {
                 <span>{", I'm  Cherecho_"}</span>
               </h1>
               <h2 className="dark:text-[#cecece] text-neutral-700 tracking-tight font-semibold text-2xl">
-                {'Software Engineer & AI Enthusiast'}
+                {'Data Engineer & AI Enthusiast'}
               </h2>
             </div>
           </div>
