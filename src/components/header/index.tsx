@@ -13,11 +13,10 @@ export default function Header({}: Props) {
             Álvaro Cerezo Pedrero
           </h1>
           <h2 className="dark:text-[#9fadad] text-[#9fadad] item-s text-transparent bg-clip-text tracking-tighter text-gradient text-xl">
-            Software Engineer & AI Enthusiast
+            Data Engineer & AI Enthusiast
           </h2>
           <p className="w-96 max-[700px]:w-full opacity-80 dark:text-[#c0c8c8] text-[#c0c8c8] item-s text-transparent text-gradient bg-clip-text leading-5">
-            {/* I create innovative AI solutions by exploring and experimenting with cutting-edge technologies. */}
-            I create innovative solutions by exploring and experimenting with cutting-edge technologies.
+            Specialized in data analytics and artificial intelligence. Experience in ETL/ELT pipelines, PySpark, and AWS automation.
           </p>
         </div>
         <NavHeader />

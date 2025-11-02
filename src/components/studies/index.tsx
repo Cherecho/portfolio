@@ -9,7 +9,7 @@ const studies: StudyType[] = [
     id: 1,
     href: 'https://u-tad.com/',
     title: 'Software engineering',
-    role: 'Engineer\'s degree',
+    role: 'Software Engineering Degree (with specialization in Data Engineering)',
     date: 'OCT 2023 — PRESENT',
     description: (
       <>
