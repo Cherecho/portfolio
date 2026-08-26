@@ -33,8 +33,24 @@ export const metadata: Metadata = {
     title: 'Álvaro Cerezo Pedrero — Software Engineer',
     description:
       'Python APIs, backend services and data-intensive processing systems.',
-    images: ['./og.png'],
+    // Versioned filename: link previews cache the image by URL, so a new name
+    // is what actually forces Discord, Slack and X to fetch the current card.
+    images: [
+      {
+        url: './og-v2.png',
+        width: 1200,
+        height: 630,
+        alt: 'Álvaro Cerezo Pedrero — software engineer, backend and data platforms'
+      }
+    ],
     type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Álvaro Cerezo Pedrero — Software Engineer',
+    description:
+      'Python APIs, backend services and data-intensive processing systems.',
+    images: ['./og-v2.png']
   }
 }
 
