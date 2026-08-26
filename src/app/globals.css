@@ -2,127 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Palette: night-shift control room. Deep indigo ground, one amber "signal"
+  accent borrowed from grid/monitoring dashboards, one cool teal for flow.
+*/
+:root {
+  /* Stored as rgb channels so Tailwind opacity modifiers work. */
+  --ground: 10 18 36;
+  --raised: 14 24 48;
+  --surface: 18 29 58;
+  --line: 31 44 77;
+  --ink: 214 222 238;
+  --muted: 128 144 176;
+  --signal: 245 165 36;
+  --flow: 127 216 201;
+
+  color-scheme: dark;
+}
+
 html {
   scroll-behavior: smooth;
-}
-
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --secondary-glow: linear-gradient(
-    to bottom right,
-    rgba(255, 86, 1, 0),
-    rgba(255, 132, 1, 0),
-    rgba(255, 128, 1, 0.3)
-  );
-
-  --body-background: #f6f6f6;
-  --primary-glow: radial-gradient(rgba(255, 128, 1, 0.3), rgba(255, 175, 1, 0));
-  --scrollbar-tumbl: #b3b3b369;
-  --gradient-title-custom: linear-gradient(#151414, #5e0c7300);
-  --shadow-cursor: 216, 144, 29, 0.15;
-} */
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --secondary-glow: linear-gradient(
-    to bottom right,
-    rgba(55, 48, 107, 0),
-    rgba(5, 1, 255, 0),
-    rgba(52, 97, 127, 0.3)
-  );
-
-  --body-background: #f6f6f6;
-  --primary-glow: radial-gradient(rgba(52, 91, 127, 0.3), rgba(255, 175, 1, 0));
-  --scrollbar-tumbl: #b3b3b369;
-  --gradient-title-custom: linear-gradient(#66347F, #5e0c7300);
-  --shadow-cursor: 216, 144, 29, 0.15;
-}
-
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-    --body-background: #020f1b;
-    --shadow-cursor: 110, 172, 218, 0.038;
-    --gradient-title-custom: linear-gradient(#03346E, #021526);
-    color-scheme: dark;
-  }
+  scroll-padding-top: 6rem;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  background: rgb(var(--ground));
+  color: rgb(var(--ink));
+  -webkit-font-smoothing: antialiased;
 }
 
-/* my styles */
-.page_center__diPtZ {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  padding: 4rem 0;
-}
-.page_center__diPtZ::before {
-  content: '';
-  left: 50%;
-  position: absolute;
-  filter: blur(30px);
-  transform: translateZ(0);
-  background: var(--secondary-glow);
-  border-radius: 50%;
-  width: 480px;
-  height: 360px;
-  margin-left: -400px;
-  animation: shadowPulse 20s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-.page_center__diPtZ::after {
-  content: '';
-  left: 50%;
-  position: absolute;
-  filter: blur(30px);
-  transform: translateZ(0);
-  background: var(--primary-glow);
-  width: 240px;
-  height: 180px;
-  z-index: -1;
-  animation: shadowPulse 20s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+::selection {
+  background: rgb(var(--signal));
+  color: rgb(var(--ground));
 }
 
-.text-gradient {
-  background-image: var(--gradient-title-custom);
-  background-attachment: fixed;
-  background-size: cover;
-  position: relative;
+:focus-visible {
+  outline: 2px solid rgb(var(--signal));
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-/* Define keyframes for shadow animation */
-@keyframes shadowPulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
+/* --- scroll reveal ------------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  filter: blur(6px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal[data-shown='true'] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* --- page-load sequence for the hero ------------------------------------ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
   }
-  35% {
-    transform: scale(1.15);
-    filter: blur(45px);
+  to {
     opacity: 1;
+    transform: none;
   }
-  75% {
-    transform: scale(1.1);
-    filter: blur(40px);
-    opacity: 0.8;
+}
+.rise {
+  opacity: 0;
+  animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* --- the amber current that runs down the scroll cue -------------------- */
+@keyframes current {
+  0% {
+    transform: translateY(-100%);
   }
   100% {
-    transform: scale(1);
-    opacity: 0.8;
+    transform: translateY(340%);
+  }
+}
+.current-run {
+  animation: current 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .rise {
+    opacity: 1;
+    animation: none;
+  }
+  .current-run {
+    animation: none;
   }
 }

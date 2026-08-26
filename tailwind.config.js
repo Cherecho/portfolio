@@ -5,6 +5,27 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}'
   ],
-  theme: {},
+  theme: {
+    extend: {
+      colors: {
+        ground: 'rgb(var(--ground) / <alpha-value>)',
+        raised: 'rgb(var(--raised) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        line: 'rgb(var(--line) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        signal: 'rgb(var(--signal) / <alpha-value>)',
+        flow: 'rgb(var(--flow) / <alpha-value>)'
+      },
+      fontFamily: {
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace']
+      },
+      maxWidth: {
+        shell: '1120px'
+      }
+    }
+  },
   plugins: []
 }

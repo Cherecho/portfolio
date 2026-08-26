@@ -1,41 +1,25 @@
-import AboutSection from '@components/about'
-import CursorShadow from '@components/cursor-shadow'
-import ExperiencesSection from '@components/experiences'
-import Studies from '@components/studies'
-import Footer from '@components/footer'
-import Header from '@components/header'
-import HomeSection from '@components/home'
-import SkillsSection from '@components/skills'
-import React from 'react'
+import About from '@components/about'
+import Education from '@components/education'
+import Experience from '@components/experience'
+import Hero from '@components/hero'
+import SiteFooter from '@components/site-footer'
+import SiteHeader from '@components/site-header'
+import Stack from '@components/stack'
 
-type Props = {}
-
-function HomePage({}: Props) {
+export default function HomePage() {
   return (
     <>
-      <CursorShadow />
-      <div className="relative">
-        <HomeSection />
-        <div
-          id="content"
-          className="px-8 relative flex items-center max-w-[1100px] mx-auto"
-        >
-          <div className="h-full text-left max-w-full">
-            <div className="grid grid-cols-2 gap-2 h-full w-full ">
-              <Header />
-              <div className="col-span-1 max-[800px]:col-span-2 flex flex-col">
-                <AboutSection />
-                <ExperiencesSection />
-                <Studies />
-                <SkillsSection />
-                <Footer />
-              </div>
-            </div>
-          </div>
+      <SiteHeader />
+      <main>
+        <Hero />
+        <div className="mx-auto max-w-shell px-6 sm:px-10">
+          <About />
+          <Experience />
+          <Education />
+          <Stack />
+          <SiteFooter />
         </div>
-      </div>
+      </main>
     </>
   )
 }
-
-export default HomePage
