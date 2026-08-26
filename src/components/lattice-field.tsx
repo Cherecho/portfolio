@@ -145,7 +145,7 @@ export default function LatticeField() {
             const stretch = Math.hypot(b.x - a.x, b.y - a.y)
             // Links fade as the cursor stretches them past their rest length.
             const strain = clamp01(1 - (stretch - SPACING) / SPACING)
-            ctx.strokeStyle = `rgba(127, 216, 201, ${
+            ctx.strokeStyle = `rgba(95, 224, 230, ${
               0.17 * strength * strain
             })`
             ctx.beginPath()
@@ -159,11 +159,11 @@ export default function LatticeField() {
       for (const n of nodes) {
         const size = NODE * (1 + n.order * 0.35)
         if (n.order < 0.5) {
-          ctx.fillStyle = `rgba(88, 112, 168, ${0.24 + n.order * 0.22})`
+          ctx.fillStyle = `rgba(84, 116, 190, ${0.24 + n.order * 0.22})`
         } else if (n.teal) {
-          ctx.fillStyle = `rgba(127, 216, 201, ${0.26 + n.order * 0.55})`
+          ctx.fillStyle = `rgba(95, 224, 230, ${0.28 + n.order * 0.55})`
         } else {
-          ctx.fillStyle = `rgba(245, 165, 36, ${0.14 + n.order * 0.5})`
+          ctx.fillStyle = `rgba(61, 139, 255, ${0.18 + n.order * 0.55})`
         }
         ctx.fillRect(n.x - size / 2, n.y - size / 2, size, size)
       }
@@ -191,6 +191,19 @@ export default function LatticeField() {
       cursor.y = -9999
     }
 
+    // The field sinks and dims as the hero scrolls away, so the lattice reads
+    // as a layer behind the page rather than a static backdrop.
+    let scrollRaf = 0
+    const applyParallax = () => {
+      scrollRaf = 0
+      const progress = Math.min(1, window.scrollY / window.innerHeight)
+      canvas.style.transform = `translate3d(0, ${progress * 90}px, 0)`
+      canvas.style.opacity = String(1 - progress * 0.75)
+    }
+    const onScroll = () => {
+      if (!scrollRaf) scrollRaf = requestAnimationFrame(applyParallax)
+    }
+
     build()
     if (still) {
       draw(SWEEP_MS)
@@ -198,14 +211,18 @@ export default function LatticeField() {
       raf = requestAnimationFrame(frame)
       window.addEventListener('pointermove', onPointer)
       window.addEventListener('pointerleave', onLeave)
+      window.addEventListener('scroll', onScroll, { passive: true })
+      applyParallax()
     }
     window.addEventListener('resize', onResize)
 
     return () => {
       cancelAnimationFrame(raf)
+      cancelAnimationFrame(scrollRaf)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onPointer)
       window.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 

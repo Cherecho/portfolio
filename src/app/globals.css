@@ -3,19 +3,20 @@
 @tailwind utilities;
 
 /*
-  Palette: night-shift control room. Deep indigo ground, one amber "signal"
-  accent borrowed from grid/monitoring dashboards, one cool teal for flow.
+  Palette: deep-water blue. One family, six steps of depth, with an azure
+  "beam" for anything interactive and a colder aqua for data and metadata.
+  No warm accent — the whole page sits below the surface.
 */
 :root {
-  /* Stored as rgb channels so Tailwind opacity modifiers work. */
-  --ground: 10 18 36;
-  --raised: 14 24 48;
-  --surface: 18 29 58;
-  --line: 31 44 77;
-  --ink: 214 222 238;
-  --muted: 128 144 176;
-  --signal: 245 165 36;
-  --flow: 127 216 201;
+  /* rgb channels so Tailwind opacity modifiers work */
+  --ground: 4 9 26;
+  --raised: 7 17 39;
+  --surface: 12 26 56;
+  --line: 22 41 78;
+  --ink: 219 230 248;
+  --muted: 118 136 175;
+  --signal: 61 139 255;
+  --flow: 95 224 230;
 
   color-scheme: dark;
 }
@@ -45,7 +46,7 @@ body {
 /* --- scroll reveal ------------------------------------------------------ */
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(20px) scale(0.985);
   filter: blur(6px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
@@ -75,7 +76,7 @@ body {
   animation-delay: var(--rise-delay, 0ms);
 }
 
-/* --- the amber current that runs down the scroll cue -------------------- */
+/* --- the current that runs down the scroll cue -------------------------- */
 @keyframes current {
   0% {
     transform: translateY(-100%);
@@ -86,6 +87,25 @@ body {
 }
 .current-run {
   animation: current 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* --- light sweeping across the primary action --------------------------- */
+.sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.45) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sheen:hover::after,
+.sheen:focus-visible::after {
+  transform: translateX(130%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -104,5 +124,8 @@ body {
   }
   .current-run {
     animation: none;
+  }
+  .sheen::after {
+    display: none;
   }
 }

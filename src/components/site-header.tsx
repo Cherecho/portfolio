@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '@libs'
 
 const SECTIONS = [
@@ -14,6 +14,8 @@ export default function SiteHeader() {
   const [progress, setProgress] = useState(0)
   const [pinned, setPinned] = useState(false)
   const [active, setActive] = useState('about')
+  const listRef = useRef<HTMLUListElement>(null)
+  const [marker, setMarker] = useState({ left: 0, width: 0 })
 
   useEffect(() => {
     let raf = 0
@@ -50,6 +52,19 @@ export default function SiteHeader() {
     }
   }, [])
 
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    const move = () => {
+      const current = list.querySelector<HTMLElement>('[data-active="true"]')
+      if (!current) return
+      setMarker({ left: current.offsetLeft, width: current.offsetWidth })
+    }
+    move()
+    window.addEventListener('resize', move)
+    return () => window.removeEventListener('resize', move)
+  }, [active])
+
   return (
     <header
       className={cn(
@@ -66,12 +81,18 @@ export default function SiteHeader() {
           Cerezo
         </a>
         <nav className="ml-auto">
-          <ul className="flex items-center gap-1 sm:gap-2">
+          <ul ref={listRef} className="relative flex items-center gap-1 sm:gap-2">
+            <li
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 h-px bg-signal transition-all duration-300 ease-out motion-reduce:transition-none"
+              style={{ left: marker.left, width: marker.width }}
+            />
             {SECTIONS.map((section) => (
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
                   aria-current={active === section.id ? 'true' : undefined}
+                  data-active={active === section.id}
                   className={cn(
                     'rounded px-2 py-1 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors sm:px-3 sm:text-xs',
                     active === section.id

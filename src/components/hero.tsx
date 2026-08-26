@@ -20,7 +20,7 @@ export default function Hero() {
       {/* Keeps the type legible over the field without flattening it. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(115%_75%_at_18%_45%,rgba(10,18,36,0.93)_0%,rgba(10,18,36,0.62)_42%,rgba(10,18,36,0.12)_100%)]"
+        className="absolute inset-0 bg-[radial-gradient(115%_75%_at_18%_45%,rgba(4,9,26,0.93)_0%,rgba(4,9,26,0.6)_42%,rgba(4,9,26,0.1)_100%)]"
       />
       <div
         aria-hidden="true"
@@ -75,7 +75,7 @@ export default function Hero() {
                 rel="noreferrer"
                 className={
                   i === 0
-                    ? 'inline-flex items-center gap-2 rounded-full bg-signal px-5 py-2.5 font-mono text-xs uppercase tracking-[0.16em] text-ground transition-transform duration-200 hover:-translate-y-0.5 motion-reduce:transition-none'
+                    ? 'sheen relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-signal px-5 py-2.5 font-mono text-xs uppercase tracking-[0.16em] text-ground transition-transform duration-200 hover:-translate-y-0.5 motion-reduce:transition-none'
                     : 'inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 font-mono text-xs uppercase tracking-[0.16em] text-muted transition-colors duration-200 hover:border-flow hover:text-flow'
                 }
               >

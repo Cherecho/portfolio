@@ -1,3 +1,4 @@
+import RailProgress from './rail-progress'
 import Reveal from './reveal'
 import Section from './section'
 
@@ -118,6 +119,7 @@ export default function Experience() {
     <Section id="experience" label="Experience">
       {/* The rail is the chronology; each node is one role on it. */}
       <ol className="relative space-y-3 border-l border-line pl-6 sm:pl-10">
+        <RailProgress />
         {ROLES.map((role, i) => (
           <li key={role.company}>
             <Reveal delay={i * 70}>
