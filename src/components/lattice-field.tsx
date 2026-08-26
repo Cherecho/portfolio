@@ -19,9 +19,13 @@ const CURSOR_RADIUS = 130
    disturbance lags behind the pointer as a wake instead of snapping back.
    The cap keeps the two independent: impulse sets how fast a node is shoved,
    decay sets how long the wake lingers, and neither inflates the other. */
-const WAKE_IMPULSE = 3.4
+const WAKE_IMPULSE = 4
 const WAKE_DECAY = 0.982
 const WAKE_MAX = 14
+/* A fast flick covers more ground per frame, so it deposits proportionally
+   more energy — otherwise nodes it barely grazes never move. */
+const WAKE_SPEED_GAIN = 1 / 18
+const WAKE_SPEED_MAX = 3.5
 
 type Node = {
   col: number
@@ -62,7 +66,10 @@ export default function LatticeField() {
     let height = 0
     let raf = 0
     let start = 0
-    const cursor = { x: -9999, y: -9999 }
+    // px/py hold where the pointer was on the previous frame; the impulse is
+    // applied along that whole segment so a fast sweep still reaches every
+    // node it crossed instead of only the one under the final position.
+    const cursor = { x: -9999, y: -9999, px: -9999, py: -9999, active: false }
 
     // Deterministic pseudo-noise so the layout is stable across renders.
     const noise = (i: number, salt: number) => {
@@ -132,14 +139,29 @@ export default function LatticeField() {
         n.y = n.ly + driftY * (1 - n.order) + settleY * n.order
 
         // The cursor pushes settled nodes out of alignment, and they drift
-        // back slowly enough to leave a trail behind the pointer.
-        const dx = n.x - cursor.x
-        const dy = n.y - cursor.y
-        const dist = Math.hypot(dx, dy)
-        if (dist < CURSOR_RADIUS) {
-          const force = (1 - dist / CURSOR_RADIUS) ** 2 * WAKE_IMPULSE
-          n.wx += (dx / (dist || 1)) * force
-          n.wy += (dy / (dist || 1)) * force
+        // back slowly enough to leave a trail behind the pointer. Distance is
+        // measured to the segment it travelled this frame, not to a point.
+        if (cursor.active) {
+          const segX = cursor.x - cursor.px
+          const segY = cursor.y - cursor.py
+          const segLen2 = segX * segX + segY * segY
+          const along = segLen2
+            ? clamp01(
+                ((n.x - cursor.px) * segX + (n.y - cursor.py) * segY) / segLen2
+              )
+            : 0
+          const dx = n.x - (cursor.px + segX * along)
+          const dy = n.y - (cursor.py + segY * along)
+          const dist = Math.hypot(dx, dy)
+          if (dist < CURSOR_RADIUS) {
+            const gain =
+              1 +
+              Math.min(Math.sqrt(segLen2) * WAKE_SPEED_GAIN, WAKE_SPEED_MAX)
+            const force =
+              (1 - dist / CURSOR_RADIUS) ** 2 * WAKE_IMPULSE * gain
+            n.wx += (dx / (dist || 1)) * force
+            n.wy += (dy / (dist || 1)) * force
+          }
         }
         const wake = Math.hypot(n.wx, n.wy)
         if (wake > WAKE_MAX) {
@@ -151,6 +173,9 @@ export default function LatticeField() {
         n.x += n.wx
         n.y += n.wy
       }
+
+      cursor.px = cursor.x
+      cursor.py = cursor.y
 
       // Wire up neighbours once they are both in formation.
       ctx.lineWidth = 1
@@ -207,16 +232,27 @@ export default function LatticeField() {
 
     const onPointer = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect()
-      cursor.x = e.clientX - rect.left
-      cursor.y = e.clientY - rect.top
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      // Re-entering the page must not sweep a segment across the whole field.
+      if (!cursor.active) {
+        cursor.px = x
+        cursor.py = y
+        cursor.active = true
+      }
+      cursor.x = x
+      cursor.y = y
     }
 
     // Park the cursor out of range whenever it is no longer over the page.
     // pointerleave on window is unreliable, so listen where it actually
     // fires and also catch the window losing focus or being hidden.
     const onLeave = () => {
+      cursor.active = false
       cursor.x = -9999
       cursor.y = -9999
+      cursor.px = -9999
+      cursor.py = -9999
     }
     const onVisibility = () => {
       if (document.hidden) onLeave()
