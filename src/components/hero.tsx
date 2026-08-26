@@ -89,12 +89,14 @@ export default function Hero() {
       <a
         href="#about"
         aria-label="Skip to About"
-        className="group absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 sm:flex"
+        className="group absolute bottom-0 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 sm:flex"
       >
         <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-muted transition-colors group-hover:text-signal">
           About
         </span>
-        <span className="relative block h-14 w-px overflow-hidden bg-line">
+        {/* Runs off the bottom edge and fades out, so it reads as the page
+            carrying on rather than a line stopping in mid-air. */}
+        <span className="relative block h-20 w-px overflow-hidden bg-gradient-to-b from-line to-transparent">
           <span className="current-run absolute inset-x-0 top-0 block h-6 bg-gradient-to-b from-transparent via-signal to-transparent" />
         </span>
       </a>
