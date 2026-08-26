@@ -15,6 +15,13 @@ const NODE = 3
 const SWEEP_MS = 2600
 const FEATHER = 420
 const CURSOR_RADIUS = 130
+/* Each pass of the cursor adds an impulse that then bleeds away, so the
+   disturbance lags behind the pointer as a wake instead of snapping back.
+   The cap keeps the two independent: impulse sets how fast a node is shoved,
+   decay sets how long the wake lingers, and neither inflates the other. */
+const WAKE_IMPULSE = 3.4
+const WAKE_DECAY = 0.982
+const WAKE_MAX = 14
 
 type Node = {
   col: number
@@ -29,6 +36,9 @@ type Node = {
   x: number
   y: number
   order: number
+  /* Live displacement carried by the wake. */
+  wx: number
+  wy: number
 }
 
 const smooth = (t: number) => t * t * (3 - 2 * t)
@@ -92,7 +102,9 @@ export default function LatticeField() {
             teal: noise(i, 5) > 0.93,
             x: lx,
             y: ly,
-            order: 0
+            order: 0,
+            wx: 0,
+            wy: 0
           })
         }
       }
@@ -119,15 +131,25 @@ export default function LatticeField() {
         n.x = n.lx + driftX * (1 - n.order) + settleX * n.order
         n.y = n.ly + driftY * (1 - n.order) + settleY * n.order
 
-        // The cursor pushes settled nodes back out of alignment.
+        // The cursor pushes settled nodes out of alignment, and they drift
+        // back slowly enough to leave a trail behind the pointer.
         const dx = n.x - cursor.x
         const dy = n.y - cursor.y
         const dist = Math.hypot(dx, dy)
         if (dist < CURSOR_RADIUS) {
-          const push = (1 - dist / CURSOR_RADIUS) ** 2 * 22
-          n.x += (dx / (dist || 1)) * push
-          n.y += (dy / (dist || 1)) * push
+          const force = (1 - dist / CURSOR_RADIUS) ** 2 * WAKE_IMPULSE
+          n.wx += (dx / (dist || 1)) * force
+          n.wy += (dy / (dist || 1)) * force
         }
+        const wake = Math.hypot(n.wx, n.wy)
+        if (wake > WAKE_MAX) {
+          n.wx = (n.wx / wake) * WAKE_MAX
+          n.wy = (n.wy / wake) * WAKE_MAX
+        }
+        n.wx *= WAKE_DECAY
+        n.wy *= WAKE_DECAY
+        n.x += n.wx
+        n.y += n.wy
       }
 
       // Wire up neighbours once they are both in formation.
@@ -157,13 +179,16 @@ export default function LatticeField() {
       }
 
       for (const n of nodes) {
-        const size = NODE * (1 + n.order * 0.35)
+        const stir = Math.min(1, Math.hypot(n.wx, n.wy) / 16)
+        const size = NODE * (1 + n.order * 0.35 + stir * 0.9)
         if (n.order < 0.5) {
-          ctx.fillStyle = `rgba(84, 116, 190, ${0.24 + n.order * 0.22})`
+          ctx.fillStyle = `rgba(84, 116, 190, ${0.24 + n.order * 0.22 + stir * 0.5})`
         } else if (n.teal) {
-          ctx.fillStyle = `rgba(95, 224, 230, ${0.28 + n.order * 0.55})`
+          ctx.fillStyle = `rgba(95, 224, 230, ${0.28 + n.order * 0.55 + stir * 0.4})`
         } else {
-          ctx.fillStyle = `rgba(61, 139, 255, ${0.18 + n.order * 0.55})`
+          ctx.fillStyle = `rgba(61, 139, 255, ${
+            0.18 + n.order * 0.55 + stir * 0.45
+          })`
         }
         ctx.fillRect(n.x - size / 2, n.y - size / 2, size, size)
       }
@@ -186,9 +211,15 @@ export default function LatticeField() {
       cursor.y = e.clientY - rect.top
     }
 
+    // Park the cursor out of range whenever it is no longer over the page.
+    // pointerleave on window is unreliable, so listen where it actually
+    // fires and also catch the window losing focus or being hidden.
     const onLeave = () => {
       cursor.x = -9999
       cursor.y = -9999
+    }
+    const onVisibility = () => {
+      if (document.hidden) onLeave()
     }
 
     // The field sinks and dims as the hero scrolls away, so the lattice reads
@@ -210,7 +241,10 @@ export default function LatticeField() {
     } else {
       raf = requestAnimationFrame(frame)
       window.addEventListener('pointermove', onPointer)
-      window.addEventListener('pointerleave', onLeave)
+      document.documentElement.addEventListener('pointerleave', onLeave)
+      document.addEventListener('mouseleave', onLeave)
+      window.addEventListener('blur', onLeave)
+      document.addEventListener('visibilitychange', onVisibility)
       window.addEventListener('scroll', onScroll, { passive: true })
       applyParallax()
     }
@@ -221,7 +255,10 @@ export default function LatticeField() {
       cancelAnimationFrame(scrollRaf)
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onPointer)
-      window.removeEventListener('pointerleave', onLeave)
+      document.documentElement.removeEventListener('pointerleave', onLeave)
+      document.removeEventListener('mouseleave', onLeave)
+      window.removeEventListener('blur', onLeave)
+      document.removeEventListener('visibilitychange', onVisibility)
       window.removeEventListener('scroll', onScroll)
     }
   }, [])

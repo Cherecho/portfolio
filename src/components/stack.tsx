@@ -116,14 +116,6 @@ const GROUPS: { name: string; tools: Tool[] }[] = [
   }
 ]
 
-/* Skills the CV lists as practice rather than product — no mark to show. */
-const PRACTICES = [
-  'API design',
-  'Data pipelines',
-  'ETL / ELT',
-  'Lakehouse architectures'
-]
-
 function Module({ tool }: { tool: Tool }) {
   const Mark = tool.mark
   return (
@@ -165,23 +157,6 @@ export default function Stack() {
           </div>
         ))}
 
-        <Reveal delay={120}>
-          <div className="grid gap-3 border-t border-line/60 pt-8 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6">
-            <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted sm:pt-1.5">
-              Practices
-            </h3>
-            <ul className="flex flex-wrap gap-2">
-              {PRACTICES.map((item) => (
-                <li
-                  key={item}
-                  className="rounded border border-line bg-raised px-3 py-1.5 font-mono text-xs text-ink transition-colors duration-200 hover:border-signal/60 hover:text-signal motion-reduce:transition-none"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
       </div>
     </Section>
   )
