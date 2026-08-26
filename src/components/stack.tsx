@@ -1,7 +1,10 @@
 import {
+  AgentsMark,
   AwsMark,
   AzureMark,
   BashMark,
+  ClaudeMark,
+  CodexMark,
   CppMark,
   DeltaLakeMark,
   DockerMark,
@@ -15,6 +18,7 @@ import {
   JavaMark,
   JavaScriptMark,
   LinuxMark,
+  McpMark,
   MongoDBMark,
   MySQLMark,
   NumPyMark,
@@ -27,7 +31,9 @@ import {
   PythonMark,
   ReactMark,
   RustMark,
-  SqlServerMark
+  SkillsMark,
+  SqlServerMark,
+  WorkflowsMark
 } from '@icons/marks'
 import Reveal from './reveal'
 import Section from './section'
@@ -65,6 +71,17 @@ const GROUPS: { name: string; tools: Tool[] }[] = [
       { name: 'NumPy', mark: NumPyMark },
       { name: 'Polars', mark: PolarsMark },
       { name: 'Delta Lake', mark: DeltaLakeMark }
+    ]
+  },
+  {
+    name: 'AI & agents',
+    tools: [
+      { name: 'Claude Code', mark: ClaudeMark },
+      { name: 'Codex', mark: CodexMark },
+      { name: 'MCP', mark: McpMark },
+      { name: 'Agents', mark: AgentsMark },
+      { name: 'Skills', mark: SkillsMark },
+      { name: 'Workflows', mark: WorkflowsMark }
     ]
   },
   {
