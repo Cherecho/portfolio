@@ -26,6 +26,7 @@ import {
   PandasMark,
   PhpMark,
   PolarsMark,
+  PowerShellMark,
   PostgreSQLMark,
   PySparkMark,
   PythonMark,
@@ -101,6 +102,7 @@ const GROUPS: { name: string; tools: Tool[] }[] = [
       { name: 'Actions', mark: GitHubActionsMark },
       { name: 'Linux', mark: LinuxMark },
       { name: 'Bash', mark: BashMark },
+      { name: 'PowerShell', mark: PowerShellMark },
       { name: 'Grafana', mark: GrafanaMark }
     ]
   },
